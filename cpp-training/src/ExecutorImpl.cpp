@@ -1,23 +1,16 @@
 #include "ExecutorImpl.hpp"
-
-#include <new>
-
 namespace adas
 {
 Executor* Executor::NewExecutor(const Pose& pose) noexcept
 {
     return new (std::nothrow) ExecutorImpl(pose);
 }
-
-ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : pose(pose)
+ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept
 {
 }
-
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    // TODO: 实现命令执行逻辑
 }
-
 Pose ExecutorImpl::Query() const noexcept
 {
     return pose;

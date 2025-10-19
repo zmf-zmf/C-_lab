@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-
 namespace adas
 {
 struct Pose {
@@ -8,7 +7,6 @@ struct Pose {
     int y;
     char heading;
 };
-
 class Executor
 {
 public:
