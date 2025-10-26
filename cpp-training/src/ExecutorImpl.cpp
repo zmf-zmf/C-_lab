@@ -13,25 +13,23 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : pose(pose)
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
     for (const auto cmd : commands) {
+        std::unique_ptr<ICommand> cmder;
         if (cmd == 'M') {
-            std::unique_ptr<MoveCommand> cmder = std::make_unique<MoveCommand>();
-            cmder->DoOperate(*this);
-
+            cmder = std::make_unique<MoveCommand>();
         } else if (cmd == 'B') {
             // 后退指令
-            std::unique_ptr<BackUpCommand> cmder = std::make_unique<BackUpCommand>();
-            cmder->DoOperate(*this);
+            cmder = std::make_unique<BackUpCommand>();
         } else if (cmd == 'L') {
             // 左转指令
-            std::unique_ptr<TurnLeftCommand> cmder = std::make_unique<TurnLeftCommand>();
-            cmder->DoOperate(*this);
+            cmder = std::make_unique<TurnLeftCommand>();
         } else if (cmd == 'R') {
             // 右转指令
-            std::unique_ptr<TurnRightCommand> cmder = std::make_unique<TurnRightCommand>();
-            cmder->DoOperate(*this);
+            cmder = std::make_unique<TurnRightCommand>();
         } else if (cmd == 'U') {
             // 调头指令
-            std::unique_ptr<UTurnCommand> cmder = std::make_unique<UTurnCommand>();
+            cmder = std::make_unique<UTurnCommand>();
+        }
+        if (cmder) {
             cmder->DoOperate(*this);
         }
         // 其他指令被忽略
