@@ -15,6 +15,11 @@ public:
     Pose Query(void) const noexcept override;
 
 private:
+    bool IsFast(void) const noexcept;
+    void Fast(void) noexcept;
+    bool fast{false};
+
+private:
     Pose pose;
     class ICommand
     {
@@ -22,13 +27,22 @@ private:
         virtual ~ICommand() = default;
         virtual void DoOperate(ExecutorImpl& executor) const noexcept = 0;
     };
-
+    class FastCommand final : public ICommand
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept override
+        {
+            executor.Fast();
+        }
+    };
     class MoveCommand final : public ICommand
     {
     public:
         void DoOperate(ExecutorImpl& executor) const noexcept override
-
         {
+            if (executor.IsFast()) {
+                executor.Move();
+            }
             executor.Move();
         }
     };
@@ -38,6 +52,9 @@ private:
         void DoOperate(ExecutorImpl& executor) const noexcept override
 
         {
+            if (executor.IsFast()) {
+                executor.Move();
+            }
             executor.TurnLeft();
         }
     };
@@ -47,6 +64,9 @@ private:
         void DoOperate(ExecutorImpl& executor) const noexcept override
 
         {
+            if (executor.IsFast()) {
+                executor.Move();
+            }
             executor.TurnRight();
         }
     };
@@ -56,6 +76,9 @@ private:
         void DoOperate(ExecutorImpl& executor) const noexcept override
 
         {
+            if (executor.IsFast()) {
+                executor.BackUp();
+            }
             executor.BackUp();
         }
     };
@@ -65,6 +88,9 @@ private:
         void DoOperate(ExecutorImpl& executor) const noexcept override
 
         {
+            if (executor.IsFast()) {
+                executor.Move();
+            }
             executor.UTurn();
         }
     };

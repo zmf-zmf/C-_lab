@@ -28,6 +28,9 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
         } else if (cmd == 'U') {
             // 调头指令
             cmder = std::make_unique<UTurnCommand>();
+        } else if (cmd == 'F') {
+            // 快速状态切换指令
+            cmder = std::make_unique<FastCommand>();
         }
         if (cmder) {
             cmder->DoOperate(*this);
@@ -35,6 +38,15 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
         // 其他指令被忽略
     }
 }
+void ExecutorImpl::Fast() noexcept
+{
+    fast = !fast;
+}
+bool ExecutorImpl::IsFast() const noexcept
+{
+    return fast;
+}
+
 void ExecutorImpl::Move() noexcept
 {
     if (pose.heading == 'E') {
