@@ -1,39 +1,29 @@
 #pragma once
 #include "ExecutorImpl.hpp"
+#include "PoseHandler.hpp"
 namespace adas
 {
+
 class ICommand
 {
 public:
     virtual ~ICommand() = default;
-    virtual void DoOperate(ExecutorImpl& executor) const noexcept = 0;
+    virtual void DoOperate(PoseHandler& executor) const noexcept = 0;
 };
 
-private:
-bool IsFast(void) const noexcept;
-void Fast(void) noexcept;
-bool fast{false};
-
-private:
-Pose pose;
-class ICommand
-{
-public:
-    virtual ~ICommand() = default;
-    virtual void DoOperate(ExecutorImpl& executor) const noexcept = 0;
-};
 class FastCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
+    void DoOperate(PoseHandler& executor) const noexcept override
     {
         executor.Fast();
     }
 };
+
 class MoveCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
+    void DoOperate(PoseHandler& executor) const noexcept override
     {
         if (executor.IsFast()) {
             executor.Move();
@@ -41,11 +31,11 @@ public:
         executor.Move();
     }
 };
+
 class TurnLeftCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
-
+    void DoOperate(PoseHandler& executor) const noexcept override
     {
         if (executor.IsFast()) {
             executor.Move();
@@ -53,11 +43,11 @@ public:
         executor.TurnLeft();
     }
 };
+
 class TurnRightCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
-
+    void DoOperate(PoseHandler& executor) const noexcept override
     {
         if (executor.IsFast()) {
             executor.Move();
@@ -65,11 +55,11 @@ public:
         executor.TurnRight();
     }
 };
+
 class BackUpCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
-
+    void DoOperate(PoseHandler& executor) const noexcept override
     {
         if (executor.IsFast()) {
             executor.BackUp();
@@ -77,11 +67,11 @@ public:
         executor.BackUp();
     }
 };
+
 class UTurnCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
-
+    void DoOperate(PoseHandler& executor) const noexcept override
     {
         if (executor.IsFast()) {
             executor.Move();
@@ -89,9 +79,5 @@ public:
         executor.UTurn();
     }
 };
-void Move(void) noexcept;
-void TurnLeft(void) noexcept;
-void TurnRight(void) noexcept;
-void BackUp(void) noexcept;
-void UTurn(void) noexcept;
-};  // namespace adas
+
+}  // namespace adas
