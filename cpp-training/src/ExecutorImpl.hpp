@@ -17,14 +17,8 @@ public:
     Pose Query(void) const noexcept override;
 
     // 供命令类调用的方法
-    bool IsFast(void) const noexcept
-    {
-        return fast;
-    }
-    void Fast(void) noexcept
-    {
-        fast = true;
-    }
+    bool IsFast(void) const noexcept;
+    void Fast(void) noexcept;
     void Move(void) noexcept;
     void TurnLeft(void) noexcept;
     void TurnRight(void) noexcept;
