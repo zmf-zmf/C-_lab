@@ -1,6 +1,7 @@
 #include "ExecutorImpl.hpp"
 
 #include <memory>
+#include <unordered_map>
 namespace adas
 {
 Executor* Executor::NewExecutor(const Pose& pose) noexcept
@@ -12,32 +13,27 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 }
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
+    std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap;
+    MoveCommand moveCommand;
+    cmderMap.emplace('M', moveCommand.operate);
+    TurnLeftCommand turnLeftCommand;
+    cmderMap.emplace('L', turnLeftCommand.operate);
+    TurnRightCommand turnRightCommand;
+    cmderMap.emplace('R', turnRightCommand.operate);
+    FastCommand fastCommand;
+    cmderMap.emplace('F', fastCommand.operate);
+    BackUpCommand backUpCommand;
+    cmderMap.emplace('B', backUpCommand.operate);
+    UTurnCommand uTurnCommand;
+    cmderMap.emplace('U', uTurnCommand.operate);
     for (const auto cmd : commands) {
-        std::unique_ptr<ICommand> cmder;
-        if (cmd == 'M') {
-            cmder = std::make_unique<MoveCommand>();
-        } else if (cmd == 'B') {
-            // 后退指令
-            cmder = std::make_unique<BackUpCommand>();
-        } else if (cmd == 'L') {
-            // 左转指令
-            cmder = std::make_unique<TurnLeftCommand>();
-        } else if (cmd == 'R') {
-            // 右转指令
-            cmder = std::make_unique<TurnRightCommand>();
-        } else if (cmd == 'U') {
-            // 调头指令
-            cmder = std::make_unique<UTurnCommand>();
-        } else if (cmd == 'F') {
-            // 快速状态切换指令
-            cmder = std::make_unique<FastCommand>();
+        const auto it = cmderMap.find(cmd);
+        if (it != cmderMap.end()) {
+            it->second(poseHandler);
         }
-        if (cmder) {
-            cmder->DoOperate(poseHandler);
-        }
-        // 其他指令被忽略
     }
 }
+
 void ExecutorImpl::Fast() noexcept
 {
     fast = !fast;
