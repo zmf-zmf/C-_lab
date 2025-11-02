@@ -13,19 +13,18 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 }
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap;
-    MoveCommand moveCommand;
-    cmderMap.emplace('M', moveCommand.operate);
-    TurnLeftCommand turnLeftCommand;
-    cmderMap.emplace('L', turnLeftCommand.operate);
-    TurnRightCommand turnRightCommand;
-    cmderMap.emplace('R', turnRightCommand.operate);
-    FastCommand fastCommand;
-    cmderMap.emplace('F', fastCommand.operate);
-    BackUpCommand backUpCommand;
-    cmderMap.emplace('B', backUpCommand.operate);
-    UTurnCommand uTurnCommand;
-    cmderMap.emplace('U', uTurnCommand.operate);
+    // std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap;
+    // cmderMap.emplace('M', MoveCommand());
+    // cmderMap.emplace('L', TurnLeftCommand());
+    // cmderMap.emplace('R', TurnRightCommand());
+    // cmderMap.emplace('F', FastCommand());
+    // cmderMap.emplace('B', BackUpCommand());
+    // cmderMap.emplace('U', UTurnCommand());
+    const std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap{
+        {'M', MoveCommand()}, {'L', TurnLeftCommand()}, {'R', TurnRightCommand()},
+        {'F', FastCommand()}, {'U', UTurnCommand()},    {'B', ReverseCommand()},
+    };
+
     for (const auto cmd : commands) {
         const auto it = cmderMap.find(cmd);
         if (it != cmderMap.end()) {
@@ -43,7 +42,7 @@ bool ExecutorImpl::IsFast() const noexcept
     return fast;
 }
 
-void ExecutorImpl::Move() noexcept
+void ExecutorImpl::Forward() noexcept
 {
     if (pose.heading == 'E') {
         ++pose.x;
@@ -82,14 +81,17 @@ void ExecutorImpl::TurnRight() noexcept
         pose.heading = 'N';
     }
 }
-void ExecutorImpl::BackUp() noexcept
+void ExecutorImpl::Backward() noexcept
 {
     if (pose.heading == 'E') {
         --pose.x;
+
     } else if (pose.heading == 'W') {
         ++pose.x;
+
     } else if (pose.heading == 'N') {
         --pose.y;
+
     } else if (pose.heading == 'S') {
         ++pose.y;
     }

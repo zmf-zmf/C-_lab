@@ -30,16 +30,16 @@ TEST(ExecutorTest, should_return_N_and_x_plus_1_given_status_is_fast_command_is_
     ASSERT_EQ(target, executor->Query());
 }
 
-TEST(ExecutorTest, should_return_E_and_x_sub_2_given_status_is_fast_command_is_FB_and_facing_is_E)
+TEST(ExecutorTest, should_return_E_and_x_sub_2_given_status_is_fast_command_is_FR_and_facing_is_E)
 {
     // given
     std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'E'}));
 
-    // when - 执行FB\指令（快速后退）
-    executor->Execute("FB");
+    // when - 执行指令FR（快速右转）
+    executor->Execute("FR");
 
     // then
-    const Pose target({-2, 0, 'E'});  // 朝东快速后退：X-2，方向不变
+    const Pose target({1, 0, 'S'});  // 朝东快速右转：X-1，方向变为南
     ASSERT_EQ(target, executor->Query());
 }
 

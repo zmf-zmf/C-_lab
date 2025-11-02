@@ -19,14 +19,17 @@ public:
     // 供命令类调用的方法
     bool IsFast(void) const noexcept;
     void Fast(void) noexcept;
-    void Move(void) noexcept;
+    void Reverse(void) noexcept;
+    bool IsReverse(void) const noexcept;
+    void Forward(void) noexcept;
     void TurnLeft(void) noexcept;
     void TurnRight(void) noexcept;
-    void BackUp(void) noexcept;
     void UTurn(void) noexcept;
+    void Backward(void) noexcept;
 
 private:
     bool fast{false};
+    bool reverse{false};
     Pose pose;
     PoseHandler poseHandler;
 };

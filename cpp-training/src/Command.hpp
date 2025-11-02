@@ -13,63 +13,75 @@ namespace adas
 //     virtual void DoOperate(PoseHandler& executor) const noexcept = 0;
 // };
 
-class MoveCommand final  // : public ICommand
+class MoveCommand final
 {
 public:
-    const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept {
+    void operator()(PoseHandler& poseHandler) const noexcept
+
+    {
         if (poseHandler.IsFast()) {
-            poseHandler.Move();
+            if (poseHandler.IsReverse()) {
+                poseHandler.Backward();
+            } else {
+                poseHandler.Forward();
+            }
         }
-        poseHandler.Move();
-    };
+        if (poseHandler.IsReverse()) {
+            poseHandler.Backward();
+        } else {
+            poseHandler.Forward();
+        }
+    }
 };
 
 class FastCommand final  // : public ICommand
 {
 public:
-    const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept {
+    void operator()(PoseHandler& poseHandler) const noexcept
+    {
         poseHandler.Fast();
+    };
+};
+class ReverseCommand final  // : public ICommand
+{
+public:
+    void operator()(PoseHandler& poseHandler) const noexcept
+    {
+        poseHandler.Reverse();
     };
 };
 
 class TurnLeftCommand final  // : public ICommand
 {
 public:
-    const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept {
+    void operator()(PoseHandler& poseHandler) const noexcept
+    {
         if (poseHandler.IsFast()) {
-            poseHandler.Move();
+            if (poseHandler.IsReverse()) {
+                poseHandler.Backward();
+
+            } else {
+                poseHandler.Forward();
+            }
         }
-        poseHandler.TurnLeft();
+        if (poseHandler.IsReverse()) {
+            poseHandler.TurnRight();
+
+        } else {
+            poseHandler.TurnLeft();
+        }
     };
 };
 
 class TurnRightCommand final  // : public ICommand
 {
 public:
-    const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept {
+    void operator()(PoseHandler& poseHandler) const noexcept
+    {
         if (poseHandler.IsFast()) {
             poseHandler.Move();
         }
         poseHandler.TurnRight();
-    };
-};
-
-class BackUpCommand final  //: public ICommand
-{
-    // public:
-    //     void DoOperate(PoseHandler& executor) const noexcept override
-    //     {
-    //         if (executor.IsFast()) {
-    //             executor.BackUp();
-    //         }
-    //         executor.BackUp();
-    //     }
-public:
-    const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept {
-        if (poseHandler.IsFast()) {
-            poseHandler.BackUp();
-        }
-        poseHandler.BackUp();
     };
 };
 
@@ -84,9 +96,19 @@ class UTurnCommand final  //: public ICommand
     //         executor.UTurn();
     //     }
 public:
-    const std::function<void(PoseHandler& poseHandler)> operate = [](PoseHandler& poseHandler) noexcept {
+    void operator()(PoseHandler& poseHandler) const noexcept
+    {
         if (poseHandler.IsFast()) {
-            poseHandler.Move();
+            if (poseHandler.IsReverse()) {
+                poseHandler.Backward();
+            } else {
+                poseHandler.Forward();
+            }
+        }
+        if (poseHandler.IsReverse()) {
+            poseHandler.Backward();
+        } else {
+            poseHandler.Forward();
         }
         poseHandler.UTurn();
     };

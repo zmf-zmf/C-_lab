@@ -30,31 +30,31 @@ TEST(ExecutorTest, should_return_default_pose_when_without_init_and_command)
     const Pose target({0, 0, 'N'});
     ASSERT_EQ(target, executor->Query());
 }
-TEST(ExecutorTest, should_return_x_plus_1_given_command_is_MB_and_facing_is_W)
+TEST(ExecutorTest, should_return_x_plus_1_given_command_is_M_and_facing_is_W)
 {
     std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'W'}));
-    executor->Execute("MB");
-    const Pose target({0, 0, 'W'});
+    executor->Execute("M");
+    const Pose target({-1, 0, 'W'});
     ASSERT_EQ(target, executor->Query());
 }
-TEST(ExecutorTest, should_return_y_plus_1_given_command_is_BBBM_and_facing_is_N)
+TEST(ExecutorTest, should_return_y_plus_1_given_command_is_RRM_and_facing_is_N)
 {
     // given
     std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'N'}));
     // when
-    executor->Execute("BBBM");
+    executor->Execute("RRM");
     // then
-    const Pose target({0, -2, 'N'});
+    const Pose target({0, -1, 'S'});
     ASSERT_EQ(target, executor->Query());
 }
-TEST(ExecutorTest, should_return_y_plus_1_given_command_is_MMBRW_and_facing_is_N)
+TEST(ExecutorTest, should_return_y_plus_1_given_command_is_MMRW_and_facing_is_N)
 {
     // given
     std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'N'}));
     // when
-    executor->Execute("MMBRM");
+    executor->Execute("MMRM");
     // then
-    const Pose target({1, 1, 'E'});
+    const Pose target({1, 2, 'E'});
     ASSERT_EQ(target, executor->Query());
 }
 TEST(ExecutorTest, should_return_y_plus_1_given_command_is_U_and_facing_is_N)
