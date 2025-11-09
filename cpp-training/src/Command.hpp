@@ -79,22 +79,23 @@ public:
     void operator()(PoseHandler& poseHandler) const noexcept
     {
         if (poseHandler.IsFast()) {
-            poseHandler.Move();
+            if (poseHandler.IsReverse()) {
+                poseHandler.Backward();
+            } else {
+                poseHandler.Forward();
+            }
         }
-        poseHandler.TurnRight();
-    };
+
+        if (poseHandler.IsReverse()) {
+            poseHandler.TurnLeft();
+        } else {
+            poseHandler.TurnRight();
+        }
+    }
 };
 
-class UTurnCommand final  //: public ICommand
+class UTurnCommand final
 {
-    // public:
-    //     void DoOperate(PoseHandler& executor) const noexcept override
-    //     {
-    //         if (executor.IsFast()) {
-    //             executor.Move();
-    //         }
-    //         executor.UTurn();
-    //     }
 public:
     void operator()(PoseHandler& poseHandler) const noexcept
     {
@@ -105,12 +106,7 @@ public:
                 poseHandler.Forward();
             }
         }
-        if (poseHandler.IsReverse()) {
-            poseHandler.Backward();
-        } else {
-            poseHandler.Forward();
-        }
-        poseHandler.UTurn();
+        poseHandler.UTurn();  // 移除额外的移动操作
     };
 };
 
