@@ -18,4 +18,3 @@ private:
     ~Singleton(void) noexcept = default;
 };
 }  // namespace adas
-   // namespace adas
