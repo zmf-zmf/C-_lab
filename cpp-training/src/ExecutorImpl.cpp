@@ -1,7 +1,11 @@
 #include "ExecutorImpl.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <unordered_map>
+
+#include "CmderFactory.hpp"
+#include "Singleton.hpp"
 namespace adas
 {
 Executor* Executor::NewExecutor(const Pose& pose) noexcept
@@ -11,26 +15,31 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
 ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 {
 }
+
+// // std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap;
+// // cmderMap.emplace('M', MoveCommand());
+// // cmderMap.emplace('L', TurnLeftCommand());
+// // cmderMap.emplace('R', TurnRightCommand());
+// // cmderMap.emplace('F', FastCommand());
+// // cmderMap.emplace('B', BackUpCommand());
+// // cmderMap.emplace('U', UTurnCommand());
+// const std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap{
+//     {'M', MoveCommand()}, {'L', TurnLeftCommand()}, {'R', TurnRightCommand()},
+//     {'F', FastCommand()}, {'U', UTurnCommand()},    {'B', ReverseCommand()},
+// };
+
+// for (const auto cmd : commands) {
+//     const auto it = cmderMap.find(cmd);
+//     if (it != cmderMap.end()) {
+//         it->second(poseHandler);
+//     }
+// }
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    // std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap;
-    // cmderMap.emplace('M', MoveCommand());
-    // cmderMap.emplace('L', TurnLeftCommand());
-    // cmderMap.emplace('R', TurnRightCommand());
-    // cmderMap.emplace('F', FastCommand());
-    // cmderMap.emplace('B', BackUpCommand());
-    // cmderMap.emplace('U', UTurnCommand());
-    const std::unordered_map<char, std::function<void(PoseHandler & poseHandler)>> cmderMap{
-        {'M', MoveCommand()}, {'L', TurnLeftCommand()}, {'R', TurnRightCommand()},
-        {'F', FastCommand()}, {'U', UTurnCommand()},    {'B', ReverseCommand()},
-    };
+    CmderFactory cf;
+    const auto cmders = Singleton<CmderFactory>::Instance().GetCmders(commands);
 
-    for (const auto cmd : commands) {
-        const auto it = cmderMap.find(cmd);
-        if (it != cmderMap.end()) {
-            it->second(poseHandler);
-        }
-    }
+    std::for_each(cmders.begin(), cmders.end(), [this](const Cmder& cmder) noexcept { cmder(poseHandler); });
 }
 
 void ExecutorImpl::Fast() noexcept
