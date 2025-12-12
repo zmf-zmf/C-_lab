@@ -1,7 +1,6 @@
 #pragma once
 #include <functional>
 
-#include "ExecutorImpl.hpp"
 #include "PoseHandler.hpp"
 namespace adas
 {
@@ -19,18 +18,7 @@ public:
     void operator()(PoseHandler& poseHandler) const noexcept
 
     {
-        if (poseHandler.IsFast()) {
-            if (poseHandler.IsReverse()) {
-                poseHandler.Backward();
-            } else {
-                poseHandler.Forward();
-            }
-        }
-        if (poseHandler.IsReverse()) {
-            poseHandler.Backward();
-        } else {
-            poseHandler.Forward();
-        }
+        poseHandler.MoveAction();
     }
 };
 
@@ -56,20 +44,7 @@ class TurnLeftCommand final  // : public ICommand
 public:
     void operator()(PoseHandler& poseHandler) const noexcept
     {
-        if (poseHandler.IsFast()) {
-            if (poseHandler.IsReverse()) {
-                poseHandler.Backward();
-
-            } else {
-                poseHandler.Forward();
-            }
-        }
-        if (poseHandler.IsReverse()) {
-            poseHandler.TurnRight();
-
-        } else {
-            poseHandler.TurnLeft();
-        }
+        poseHandler.TurnLeftAction();
     };
 };
 
@@ -78,19 +53,7 @@ class TurnRightCommand final  // : public ICommand
 public:
     void operator()(PoseHandler& poseHandler) const noexcept
     {
-        if (poseHandler.IsFast()) {
-            if (poseHandler.IsReverse()) {
-                poseHandler.Backward();
-            } else {
-                poseHandler.Forward();
-            }
-        }
-
-        if (poseHandler.IsReverse()) {
-            poseHandler.TurnLeft();
-        } else {
-            poseHandler.TurnRight();
-        }
+        poseHandler.TurnRightAction();
     }
 };
 
@@ -99,14 +62,7 @@ class UTurnCommand final
 public:
     void operator()(PoseHandler& poseHandler) const noexcept
     {
-        if (poseHandler.IsFast()) {
-            if (poseHandler.IsReverse()) {
-                poseHandler.Backward();
-            } else {
-                poseHandler.Forward();
-            }
-        }
-        poseHandler.UTurn();  // 移除额外的移动操作
+        poseHandler.UTurnAction();
     };
 };
 

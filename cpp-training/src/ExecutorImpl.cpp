@@ -12,7 +12,8 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
 {
     return new (std::nothrow) ExecutorImpl(pose);
 }
-ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
+
+ExecutorImpl::ExecutorImpl(const Pose& pose, ::adas::VehicleType type) noexcept : poseHandler(pose, type)
 {
 }
 
@@ -49,6 +50,15 @@ void ExecutorImpl::Fast() noexcept
 bool ExecutorImpl::IsFast() const noexcept
 {
     return fast;
+}
+
+void ExecutorImpl::Reverse() noexcept
+{
+    reverse = !reverse;
+}
+bool ExecutorImpl::IsReverse() const noexcept
+{
+    return reverse;
 }
 
 void ExecutorImpl::Forward() noexcept
