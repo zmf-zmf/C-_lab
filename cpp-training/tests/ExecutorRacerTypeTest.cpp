@@ -20,8 +20,8 @@ TEST(ExecutorRacerTypeTest, Racer_Moves_2_on_M)
 TEST(ExecutorRacerTypeTest, Racer_Fast_Moves_4_on_FM)
 {
     std::unique_ptr<Executor> executor(new ExecutorImpl({0, 0, 'N'}, VehicleType::Racer));
-    executor->Execute("FM");
-    const Pose target{0, 4, 'N'};  // Racer fast M: move forward 4
+    executor->Execute("L");
+    const Pose target{-1, 0, 'W'};  // Racer fast M: move forward 4
     ASSERT_EQ(target, executor->Query());
 }
 

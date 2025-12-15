@@ -98,96 +98,72 @@ void PoseHandler::MoveAction() noexcept
 
 void PoseHandler::TurnLeftAction() noexcept
 {
+    auto run = [&](std::initializer_list<void (PoseHandler::*)()> seq) noexcept {
+        for (auto fn : seq) {
+            (this->*fn)();
+        }
+    };
+
     if (type == VehicleType::Racer) {
         if (fast) {
-            // Racer Fast + L: forward1, left turn, forward1
-            if (reverse) {
-                // if reverse+fast: backward1, right turn, backward1
-                Backward();
-                TurnRight();
-                Backward();
-            } else {
-                Forward();
-                TurnLeft();
-                Forward();
-            }
+            // fast L
+            if (reverse)
+                run({&PoseHandler::Backward, &PoseHandler::TurnRight, &PoseHandler::Backward});
+            else
+                run({&PoseHandler::Forward, &PoseHandler::TurnLeft, &PoseHandler::Forward});
         } else {
-            // Normal: left then forward1; Reverse: right then backward1
-            if (reverse) {
-                TurnRight();
-                Backward();
-            } else {
-                TurnLeft();
-                Forward();
-            }
+            // normal L
+            if (reverse)
+                run({&PoseHandler::TurnRight, &PoseHandler::Backward});
+            else
+                run({&PoseHandler::TurnLeft, &PoseHandler::Forward});
         }
     } else {  // Bus
-        // Bus: L normally: forward1 then left turn; if fast: forward1, forward1, then left
         if (fast) {
-            if (reverse) {
-                // reverse+fast: backward1, backward1, then right turn
-                Backward();
-                Backward();
-                TurnRight();
-            } else {
-                Forward();
-                Forward();
-                TurnLeft();
-            }
+            if (reverse)
+                run({&PoseHandler::Backward, &PoseHandler::Backward, &PoseHandler::TurnLeft});
+            else
+                run({&PoseHandler::Forward, &PoseHandler::Forward, &PoseHandler::TurnLeft});
         } else {
-            if (reverse) {
-                Backward();
-                TurnRight();
-            } else {
-                Forward();
-                TurnLeft();
-            }
+            if (reverse)
+                run({&PoseHandler::Backward, &PoseHandler::TurnRight});
+            else
+                run({&PoseHandler::Forward, &PoseHandler::TurnLeft});
         }
     }
 }
 
 void PoseHandler::TurnRightAction() noexcept
 {
+    auto run = [&](std::initializer_list<void (PoseHandler::*)()> seq) noexcept {
+        for (auto fn : seq) {
+            (this->*fn)();
+        }
+    };
+
     if (type == VehicleType::Racer) {
         if (fast) {
-            if (reverse) {
-                // reverse+fast: backward1, left turn, backward1
-                Backward();
-                TurnLeft();
-                Backward();
-            } else {
-                Forward();
-                TurnRight();
-                Forward();
-            }
+            if (reverse)
+                run({&PoseHandler::Backward, &PoseHandler::TurnLeft, &PoseHandler::Backward});
+            else
+                run({&PoseHandler::Forward, &PoseHandler::TurnRight, &PoseHandler::Forward});
         } else {
-            if (reverse) {
-                TurnLeft();
-                Backward();
-            } else {
-                TurnRight();
-                Forward();
-            }
+            if (reverse)
+                run({&PoseHandler::TurnLeft, &PoseHandler::Backward});
+            else
+                run({&PoseHandler::TurnRight, &PoseHandler::Forward});
         }
     } else {  // Bus
         if (fast) {
-            if (reverse) {
-                Backward();
-                Backward();
-                TurnLeft();
-            } else {
-                Forward();
-                Forward();
-                TurnRight();
-            }
+            if (reverse)
+                run({&PoseHandler::Backward, &PoseHandler::Backward, &PoseHandler::TurnRight});
+            else
+                run({&PoseHandler::Forward, &PoseHandler::Forward, &PoseHandler::TurnRight});
         } else {
-            if (reverse) {
-                Backward();
-                TurnLeft();
-            } else {
-                Forward();
-                TurnRight();
-            }
+            if (reverse)
+                run({&PoseHandler::Backward, &PoseHandler::TurnLeft});
+            else
+                run({&PoseHandler::Forward, &PoseHandler::TurnRight});
         }
     }
 }
